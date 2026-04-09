@@ -1,1714 +1,707 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mathare Community Anti-Drugs Organization</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
     <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    :root {
+        --green: #0ec57f; --green-dark: #0a9460; --green-deeper: #076e47;
+        --black: #0d0d0d; --off-white: #f8faf9; --text: #1a1a1a; --muted: #555;
+        --card-bg: #ffffff; --radius: 18px; --shadow: 0 8px 32px rgba(0,0,0,0.10);
     }
-    
-    body {
-        font-family: Poppins, sans-serif;
-        overflow-x: hidden;
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Nunito', sans-serif; color: var(--text); background: #fff; overflow-x: hidden; }
+
+    /* STICKY DONATE */
+    #sticky-donate {
+        position: fixed; top: 50%; right: 0; transform: translateY(-50%);
+        z-index: 3000; writing-mode: vertical-rl; text-orientation: mixed;
+        background: var(--green); color: #fff; font-family: 'Nunito', sans-serif;
+        font-weight: 800; font-size: 13px; letter-spacing: 2px;
+        padding: 18px 10px; border-radius: 12px 0 0 12px; cursor: pointer;
+        border: none; box-shadow: -4px 0 20px rgba(14,197,127,0.35);
+        transition: background 0.3s, padding 0.3s;
     }
-    
+    #sticky-donate:hover { background: var(--green-dark); padding: 18px 14px; }
+
+    /* PROGRESS BAR */
+    #progress-bar {
+        position: fixed; top:0; left:0; height: 3px; width: 0%;
+        background: var(--green); z-index: 4000; transition: width 0.2s ease;
+    }
+
     /* NAVBAR */
     .navbar {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        padding: 15px 40px;
-        background: rgb(10, 10, 10);
-        backdrop-filter: blur(10px);
-        z-index: 1000;
+        position: fixed; top:0; width:100%;
+        display: flex; align-items: center; justify-content: space-between;
+        padding: 0 40px; height: 68px;
+        background: rgba(10,10,10,0.96); backdrop-filter: blur(12px);
+        z-index: 2000; border-bottom: 1px solid rgba(14,197,127,0.15);
     }
-    
-    nav {
-        display: flex;
-        gap: 20px;
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon {
+        width: 36px; height: 36px; background: var(--green); border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: 800; font-size: 14px; color: #fff;
     }
-    
+    .logo-text { font-weight: 800; font-size: 16px; color: #fff; line-height: 1.2; }
+    .logo-text span { color: var(--green); display: block; font-size: 10px; font-weight: 600; letter-spacing: 1px; }
+    nav { display: flex; align-items: center; gap: 4px; }
     nav a {
-        text-decoration: none;
-        color: white;
-        font-weight: 500;
+        color: #ccc; text-decoration: none; font-size: 13px; font-weight: 600;
+        padding: 7px 12px; border-radius: 8px; transition: 0.2s;
     }
+    nav a:hover, nav a.active { color: #fff; background: rgba(14,197,127,0.15); }
+    nav .btn-donate-nav {
+        background: var(--green); color: #fff !important;
+        padding: 8px 18px; border-radius: 30px; font-weight: 700; margin-left: 6px;
+    }
+    nav .btn-donate-nav:hover { background: var(--green-dark) !important; }
+    .menu-btn { display: none; background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
 
-    nav a.active {
-    color: #00ffae;
-    font-weight: bold;
-}
-    .menu-btn {
-        display: none;
-    }
-    
     /* HERO */
-    .hero {
-        height: 100vh;
-        position: relative;
-        overflow: hidden;
+    .hero { height: 100vh; position: relative; overflow: hidden; background: #000; }
+    .slide { position: absolute; inset: 0; opacity: 0; transition: opacity 1.2s ease; z-index: 0; }
+    .slide img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+    .slide.active { opacity: 1; z-index: 1; }
+    .hero-overlay {
+        position: absolute; inset: 0;
+        background: linear-gradient(to right, rgba(0,0,0,0.72) 45%, rgba(0,0,0,0.15));
+        z-index: 2;
     }
-    
-    .slide {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        opacity: 0;
-        transition: 1s;
-        transform: scale(1.05);
+    .hero-content { position: absolute; z-index: 3; bottom: 12%; left: 6%; max-width: 600px; }
+    .hero-tag {
+        display: inline-block; background: var(--green); color: #fff;
+        font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+        padding: 6px 16px; border-radius: 30px; margin-bottom: 18px;
     }
-
-    .slide.active {
-    opacity: 1;
-    z-index: 1;
-}
-
-/* HERO CONTENT */
-.hero-content {
-    position: relative;
-    color: white;
-    padding: 180px 50px;
-    max-width: 650px;
-    z-index: 2;
-}
-
-/* ABOUT */
-.section {
-    padding: 100px 40px;
-    text-align: center;
-}
-
-.about-text {
-    margin: 20px 0;
-    font-size: 15px;
-}
-
-.founded {
-    margin-bottom: 20px;
-    color: #5b3df5;
-}
-
-/* SERVICES */
-.services {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-}
-
-.service-card {
-    background: rgb(14, 197, 127);
-    padding: 20px;
-    border-radius: 20px;
-    text-align: center;
-    width: 280px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.service-card:hover {
-    transform: translateY(-5px);
-}
-
-.service-card img {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 15px;
-    margin-bottom: 10px;
-}
-
-/* ACCORDION STYLE */
-.accordion {
-     max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease, padding 0.3s ease;
-    padding: 0 15px;
-    background: #f7f7f7;
-    border-radius: 10px;
-}
-
-.accordion.open {
-    max-height: 500px;
-    padding: 10px 15px;
-}
-
-/* ACTIVITIES */
-.activities {
-    padding: 60px 20px;
-    text-align: center;
-}
-
-.activity-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-    margin-top: 20px;
-}
-
-.activity-grid img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    border-radius: 12px;
-}
-
-/* CARDS */
-.cards {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-.card {
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-    width: 280px;
-}
-
-/* STATS */
-.stats {
-    display: flex;
-    justify-content: center;
-    gap: 50px;
-    flex-wrap: wrap;
-}
-
-/* GALLERY */
-.gallery {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 10px;
-    padding: 40px;
-}
-
-.gallery img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-/* CTA */
-.cta {
-    background: rgb(14, 197, 127);;
-    color: rgb(12, 12, 12);
-    text-align: center;
-    padding: 80px 20px;
-}
-
-/* FORM */
-form {
-    display: flex;
-    flex-direction: column;
-    max-width: 400px;
-    margin: auto;
-    gap: 10px;
-}
-
-input,
-textarea {
-    padding: 10px;
-}
-
-/* MODAL */
-.modal {
-    display: none;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-.modal-content {
-    background: rgb(14, 197, 127);
-    padding: 30px;
-    border-radius: 15px;
-    text-align: center;
-    width: 300px;
-}
-
-/* FADE */
-.fade {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: 1s;
-}
-
-.fade.show {
-    opacity: 1;
-    transform: translateY(0);
-}
-
-/* PROGRAM CARDS */
-#programs {
-    text-align: center;
-}
-
-#programs .cards {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: stretch;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-
-.program-card {
-    background: rgb(14, 197, 127);
-    padding: 20px;
-    width: 300px;
-    border-radius: 15px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    text-align: left;
-    transition: 0.3s;
-}
-
-.program-card:hover {
-    transform: translateY(-5px);
-}
-
-/* ACTIVITY CARD */
-.activity-card {
-    background: rgb(14, 197, 127);
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    text-align: left;
-}
-
-.activity-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-}
-
-.activity-card h3 {
-    padding: 10px 15px 0;
-}
-
-.activity-card p {
-    padding: 0 15px 10px;
-    font-size: 14px;
-    color: #444;
-}
-
-/* READ MORE LINK */
-.more {
-    display: inline-block;
-    margin: 0 15px 10px;
-    color: #5b3df5;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-/* HIDDEN DETAILS */
-.activity-details {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s ease, padding 0.3s ease;
-    padding: 0 15px;
-    background: #f7f7f7;
-    border-radius: 10px;
-}
-
-.activity-details.open {
-    max-height: 500px;
-    padding: 10px 15px;
-}
-
-/* GALLERY GRID CARDS */
-.gallery-card {
-    background: rgb(14, 197, 127);
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    text-align: left;
-}
-
-.gallery-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-}
-
-/* TEXT */
-.title {
-    font-weight: 600;
-    padding: 10px 15px 0;
-}
-
-.brief {
-    padding: 0 15px 10px;
-    font-size: 13px;
-    color: #555;
-}
-
-/* HIDDEN DETAILS */
-.gallery-details {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease, padding 0.3s ease;
-    background: #f7f7f7;
-    padding: 0 15px;
-}
-
-.gallery-details.open {
-    max-height: 500px;
-    padding: 10px 15px;
-}
-
-/* FEEDBACK SECTION */
-#feedback {
-    background: white;
-}
-
-.feedback-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.feedback-box {
-    background: rgb(14, 197, 127);
-    padding: 25px;
-    border-radius: 15px;
-    width: 320px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-    text-align: left;
-}
-
-.feedback-box h3 {
-    margin-bottom: 10px;
-}
-
-.feedback-box input,
-.feedback-box textarea,
-.feedback-box select {
-    width: 100%;
-    padding: 10px;
-    margin: 8px 0;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-}
-
-.feedback-box button {
-    width: 100%;
-    padding: 10px;
-    background: #0f0e14;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
-}
-
-.feedback-box button:hover {
-    background: #44449c;
-}
-
-/* BASE SECTION BACKGROUND SYSTEM */
-.section::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;   /* FIXED */
-    background-size: cover;   /* FIXED */
-    background-position: center;
-    background-repeat: no-repeat;
-    opacity: 0.10;   /* slightly stronger so you can SEE it */
-    z-index: 0;
-    pointer-events: none;
-}
-
-.section > * {
-    position: relative;
-    z-index: 1;
-}
-
-#about::before {
-    background-image: url('MCADO2.jpeg');
-}
-
-#programs::before {
-    background-image: url('MCADO2.jpeg');
-}
-
-#services::before {
-    background-image: url('MCADO2.jpeg');
-}
-
-#gallery::before {
-    background-image: url('MCADO2.jpeg');
-}
-
-.activities::before {
-    background-image: url('MCADO2.jpeg');
-}
-
-#feedback::before {
-    background-image: url('MCADO2.jpeg');
-}
-
-.cta::before {
-    background-image: url('MCADO2.jpeg');
-}
-
-.section {
-    position: relative;
-    overflow: hidden;
-    margin-bottom: 0;
-    padding: 100px 40px;
-    background-clip: padding-box;
-}
-
-/* SCROLL PROGRESS BAR */
-#progress-bar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 4px;
-    width: 0%;
-    background: #d4c3c3;
-    z-index: 3000;
-    transition: width 0.2s ease;
-}
-
-#progress-bar::after {
-    content: "";
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 60px;
-    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.6));
-}
-
-/* FLOATING MENU */
-.floating-menu {
-    position: fixed;
-    right: 20px;
-    bottom: 40px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    z-index: 2500;
-}
-.float-btn {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.6); /* darker glass look */
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    text-decoration: none;
-    font-size: 16px;
-    backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.2);
-    transition: all 0.3s ease;
-}
-
-/* Hover */
-.float-btn:hover {
-    transform: scale(1.1);
-    background: #141414;
-}
-
-.float-btn.donate {
-    background: #ff4d6d;
-    font-size: 20px;
-}
-
-/* HTML SMOOTH SCROLL */
-html {
-    scroll-behavior: smooth;
-}
-
-/* FOOTER */
-footer {
-    background: #111;
-    color: white;
-    padding: 30px;
-    text-align: center;
-}
-
-.footer {
-    background: #111;
-    color: white;
-    padding: 50px 20px 20px;
-}
-
-.footer-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 20px;
-    max-width: 1100px;
-    margin: auto;
-}
-
-.footer-box {
-    flex: 1;
-    min-width: 220px;
-}
-
-.footer-box h3 {
-    margin-bottom: 10px;
-}
-
-.footer-box p,
-.footer-box a {
-    font-size: 14px;
-    color: #ccc;
-    display: block;
-    margin: 5px 0;
-    text-decoration: none;
-}
-
-.footer-box a:hover {
-    color: white;
-}
-
-.footer-box input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 10px;
-    border: none;
-    border-radius: 5px;
-}
-
-.footer-box button {
-    margin-top: 10px;
-    padding: 8px;
-    width: 100%;
-    background: #5b3df5;
-    border: none;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-/* SOCIAL ICONS */
-.socials {
-    display: flex;
-    gap: 12px;
-    margin-top: 10px;
-}
-
-.socials a {
-    width: 35px;
-    height: 35px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #222;
-    border-radius: 50%;
-    font-size: 16px;
-    transition: 0.3s;
-    text-decoration: none;
-}
-
-.socials a:hover {
-    background: #5b3df5;
-    transform: scale(1.1);
-}
-
-.socials a:nth-child(1):hover {
-    background: #1877f2;
-}
-
-.socials a:nth-child(2):hover {
-    background: #e4405f;
-}
-
-.socials a:nth-child(3):hover {
-    background: #000;
-}
-
-.socials a:nth-child(4):hover {
-    background: #25d366;
-}
-
-/* COPYRIGHT */
-.footer-bottom {
-    text-align: center;
-    margin-top: 30px;
-    padding-top: 10px;
-    border-top: 1px solid #333;
-    font-size: 13px;
-    color: #aaa;
-}
-
-/* RESPONSIVE NAVIGATION */
-@media (max-width: 768px) {
-    nav {
-        display: none;
-        flex-direction: column;
-        background: white;
-        position: absolute;
-        top: 70px;
-        right: 0;
-        width: 200px;
-        padding: 10px;
-        border-radius: 10px;
-    }
-
-    nav.active {
-        display: flex;
-    }
-
-    nav a {
-        padding: 10px;
-        display: block;
-    }
-
-    .menu-btn {
-        display: block;
-    }
-
-    .hero-content {
-        padding: 120px 20px;
-        text-align: center;
-    }
-
     .hero-content h1 {
-        font-size: 24px;
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(32px, 5vw, 56px); color: #fff; line-height: 1.15; margin-bottom: 16px;
     }
-
-    .hero-content p {
-        font-size: 14px;
+    .hero-content h1 em { color: var(--green); font-style: normal; }
+    .hero-content p { font-size: 16px; color: rgba(255,255,255,0.82); line-height: 1.7; margin-bottom: 28px; max-width: 480px; }
+    .hero-btns { display: flex; gap: 14px; flex-wrap: wrap; }
+    .btn {
+        display: inline-flex; align-items: center; gap: 8px;
+        padding: 13px 28px; border-radius: 50px; font-family: 'Nunito', sans-serif;
+        font-weight: 700; font-size: 14px; text-decoration: none; cursor: pointer;
+        border: none; transition: all 0.3s ease;
     }
-}
+    .btn-green { background: var(--green); color: #fff; box-shadow: 0 6px 24px rgba(14,197,127,0.4); }
+    .btn-green:hover { background: var(--green-dark); transform: translateY(-2px); }
+    .btn-outline-hero { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.6); }
+    .btn-outline-hero:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+    .hero-dots { position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 3; }
+    .hero-dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.4); cursor: pointer; transition: 0.3s; border: none; }
+    .hero-dot.active { background: var(--green); width: 24px; border-radius: 4px; }
 
-/* RESPONSIVE PROGRAMS */
-@media (max-width: 768px) {
-    #programs .cards {
-        flex-direction: column;
-        align-items: center;
+    /* STATS BAR */
+    .stats-bar { background: var(--black); padding: 0 40px; }
+    .stats-inner { display: flex; justify-content: center; flex-wrap: wrap; max-width: 1100px; margin: auto; }
+    .stat-item {
+        flex: 1; min-width: 140px; padding: 30px 20px; text-align: center;
+        border-right: 1px solid rgba(255,255,255,0.08);
     }
+    .stat-item:last-child { border-right: none; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 40px; color: var(--green); line-height: 1; display: block; }
+    .stat-suffix { font-size: 26px; }
+    .stat-label { font-size: 11px; color: #999; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 6px; display: block; }
 
-    .program-card {
-        width: 90%;
+    /* SECTIONS */
+    .section { padding: 90px 40px; position: relative; overflow: hidden; }
+    .section-alt { background: var(--off-white); }
+    .section-header { text-align: center; margin-bottom: 52px; }
+    .section-tag {
+        display: inline-block; color: var(--green-dark); font-size: 11px;
+        font-weight: 700; letter-spacing: 2px; text-transform: uppercase;
+        margin-bottom: 10px; background: rgba(14,197,127,0.1); padding: 5px 14px; border-radius: 30px;
     }
-}
+    .section-header h2 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 40px); color: var(--text); line-height: 1.2; }
+    .section-header p { font-size: 15px; color: var(--muted); max-width: 540px; margin: 12px auto 0; line-height: 1.8; }
 
-/* RESPONSIVE GALLERY */
-@media (max-width: 768px) {
-    .gallery {
-        grid-template-columns: 1fr;
-        padding: 20px;
+    /* ABOUT */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center; max-width: 1100px; margin: auto; }
+    .about-img-wrap { position: relative; border-radius: var(--radius); overflow: hidden; }
+    .about-img-wrap img { width: 100%; height: 440px; object-fit: cover; border-radius: var(--radius); display: block; }
+    .about-badge {
+        position: absolute; bottom: 24px; left: 24px; background: var(--green); color: #fff;
+        padding: 14px 20px; border-radius: 14px; font-weight: 800; text-align: center;
     }
+    .about-badge .num { font-size: 28px; display: block; }
+    .about-badge .lbl { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; }
+    .about-text-col h2 { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3vw, 36px); margin: 12px 0 16px; line-height: 1.25; }
+    .about-text-col p { font-size: 15px; color: var(--muted); line-height: 1.85; margin-bottom: 14px; }
+    .about-pillars { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0 28px; }
+    .pillar { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; color: var(--text); }
+    .pillar-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--green); flex-shrink: 0; }
 
-    .gallery-card {
-        width: 100%;
+    /* PROGRAMS */
+    .programs-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1100px; margin: auto; }
+    .prog-card { background: var(--card-bg); border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; transition: transform 0.3s, box-shadow 0.3s; border: 1px solid rgba(0,0,0,0.06); }
+    .prog-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(0,0,0,0.14); }
+    .prog-card-top { background: var(--green); padding: 28px 24px 24px; position: relative; }
+    .prog-num { font-family: 'Playfair Display', serif; font-size: 52px; color: rgba(255,255,255,0.15); position: absolute; top: 10px; right: 20px; line-height: 1; }
+    .prog-icon { width: 46px; height: 46px; background: rgba(255,255,255,0.2); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 14px; }
+    .prog-card-top h3 { font-size: 16px; color: #fff; font-weight: 800; line-height: 1.3; }
+    .prog-card-body { padding: 20px 24px 24px; }
+    .prog-meta { margin-bottom: 14px; }
+    .prog-meta p { font-size: 13px; color: var(--muted); line-height: 1.5; margin-bottom: 4px; }
+    .prog-meta p strong { color: var(--text); }
+    .accordion { max-height: 0; overflow: hidden; transition: max-height 0.5s ease, padding 0.3s; padding: 0; background: var(--off-white); border-radius: 10px; font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .accordion.open { max-height: 600px; padding: 14px; margin-top: 10px; }
+    .accordion ul { padding-left: 16px; margin-top: 8px; }
+    .accordion ul li { margin-bottom: 5px; }
+    .btn-sm { display: inline-flex; align-items: center; gap: 6px; padding: 8px 18px; border-radius: 30px; font-size: 13px; font-weight: 700; background: transparent; color: var(--green-dark); border: 2px solid var(--green); cursor: pointer; transition: 0.25s; font-family: 'Nunito', sans-serif; }
+    .btn-sm:hover { background: var(--green); color: #fff; }
+
+    /* SERVICES */
+    .services-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; max-width: 1100px; margin: auto; }
+    .service-card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.06); transition: transform 0.3s; }
+    .service-card:hover { transform: translateY(-5px); }
+    .service-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+    .service-card-body { padding: 20px; }
+    .service-card-body h3 { font-size: 17px; font-weight: 800; margin-bottom: 6px; }
+    .service-card-body p { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+    .service-details { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .service-details.open { max-height: 300px; margin-top: 10px; }
+
+    /* STORIES */
+    .stories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 1100px; margin: auto; }
+    .story-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border: 1px solid rgba(0,0,0,0.06); transition: transform 0.3s; display: flex; flex-direction: column; }
+    .story-card:hover { transform: translateY(-5px); }
+    .story-img { width: 100%; height: 200px; object-fit: cover; display: block; }
+    .story-body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+    .story-tag { display: inline-block; background: rgba(14,197,127,0.12); color: var(--green-dark); font-size: 11px; font-weight: 700; letter-spacing: 1px; padding: 4px 12px; border-radius: 30px; text-transform: uppercase; margin-bottom: 12px; }
+    .story-body h3 { font-size: 16px; font-weight: 800; margin-bottom: 10px; line-height: 1.3; }
+    .story-body p { font-size: 13px; color: var(--muted); line-height: 1.75; flex: 1; }
+    .story-footer { display: flex; align-items: center; gap: 12px; margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.07); }
+    .story-avatar { width: 38px; height: 38px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px; color: #fff; flex-shrink: 0; }
+    .story-name { font-size: 13px; font-weight: 700; color: var(--text); }
+    .story-role { font-size: 11px; color: var(--muted); }
+    .story-quote { background: linear-gradient(135deg, var(--green), var(--green-dark)); border-radius: var(--radius); padding: 32px; color: #fff; display: flex; flex-direction: column; justify-content: space-between; }
+    .story-quote .quote-mark { font-family: 'Playfair Display', serif; font-size: 80px; color: rgba(255,255,255,0.25); line-height: 0.8; margin-bottom: 16px; }
+    .story-quote p { font-size: 16px; line-height: 1.75; font-weight: 600; }
+    .story-quote .who { margin-top: 20px; font-size: 13px; opacity: 0.8; }
+
+    /* NEWS */
+    .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 1100px; margin: auto; }
+    .news-card { background: #fff; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; border: 1px solid rgba(0,0,0,0.06); transition: transform 0.3s; display: flex; flex-direction: column; }
+    .news-card:hover { transform: translateY(-5px); }
+    .news-card img { width: 100%; height: 190px; object-fit: cover; display: block; }
+    .news-card-body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+    .news-meta { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .news-cat { background: rgba(14,197,127,0.12); color: var(--green-dark); font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 30px; text-transform: uppercase; letter-spacing: 1px; }
+    .news-date { font-size: 12px; color: #999; }
+    .news-card-body h3 { font-size: 16px; font-weight: 800; margin-bottom: 10px; line-height: 1.4; }
+    .news-card-body p { font-size: 13px; color: var(--muted); line-height: 1.75; flex: 1; }
+    .news-read { display: inline-flex; align-items: center; gap: 6px; margin-top: 16px; color: var(--green-dark); font-size: 13px; font-weight: 700; text-decoration: none; cursor: pointer; }
+    .news-read:hover { color: var(--green); }
+
+    /* ACTIVITIES */
+    .activities-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; max-width: 1100px; margin: auto; }
+    .activity-card { background: #fff; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.06); transition: transform 0.3s; }
+    .activity-card:hover { transform: translateY(-5px); }
+    .activity-card img { width: 100%; height: 180px; object-fit: cover; display: block; }
+    .activity-card-body { padding: 18px 20px 20px; }
+    .activity-card-body h3 { font-size: 15px; font-weight: 800; margin-bottom: 6px; }
+    .activity-card-body p { font-size: 13px; color: var(--muted); margin-bottom: 12px; line-height: 1.6; }
+    .activity-details { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .activity-details.open { max-height: 300px; margin-top: 10px; }
+
+    /* GALLERY */
+    .gallery-masonry { columns: 3; gap: 16px; max-width: 1100px; margin: auto; }
+    .gallery-item { break-inside: avoid; margin-bottom: 16px; border-radius: 14px; overflow: hidden; position: relative; cursor: pointer; }
+    .gallery-item img { width: 100%; display: block; transition: transform 0.4s; }
+    .gallery-item:hover img { transform: scale(1.04); }
+    .gallery-overlay { position: absolute; inset: 0; background: rgba(0,0,0,0); transition: 0.3s; display: flex; flex-direction: column; justify-content: flex-end; padding: 16px; }
+    .gallery-item:hover .gallery-overlay { background: rgba(0,0,0,0.42); }
+    .gallery-caption { color: #fff; font-size: 13px; font-weight: 700; opacity: 0; transform: translateY(8px); transition: 0.3s; }
+    .gallery-item:hover .gallery-caption { opacity: 1; transform: translateY(0); }
+
+    /* TEAM */
+    .team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 24px; max-width: 1100px; margin: auto; }
+    .team-card { background: #fff; border-radius: var(--radius); padding: 28px 20px 24px; text-align: center; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.06); transition: transform 0.3s; }
+    .team-card:hover { transform: translateY(-5px); }
+    .team-card img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; margin: 0 auto 14px; border: 3px solid var(--green); display: block; }
+    .team-card h3 { font-size: 15px; font-weight: 800; margin-bottom: 4px; }
+    .team-card .role { font-size: 12px; color: var(--green-dark); font-weight: 700; }
+
+    /* CTA */
+    .cta-banner { background: linear-gradient(135deg, var(--green-deeper), var(--green-dark)); padding: 80px 40px; text-align: center; position: relative; overflow: hidden; }
+    .cta-banner h2 { font-family: 'Playfair Display', serif; font-size: clamp(26px, 4vw, 42px); color: #fff; margin-bottom: 14px; }
+    .cta-banner p { font-size: 16px; color: rgba(255,255,255,0.82); max-width: 500px; margin: 0 auto 32px; line-height: 1.75; }
+    .cta-btns { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-white { background: #fff; color: var(--green-dark); font-weight: 800; }
+    .btn-white:hover { background: #f0fff8; transform: translateY(-2px); }
+    .btn-outline-white { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.6); }
+    .btn-outline-white:hover { background: rgba(255,255,255,0.1); border-color: #fff; }
+
+    /* FEEDBACK */
+    .feedback-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; max-width: 900px; margin: auto; }
+    .feedback-card { background: #fff; border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow); border: 1px solid rgba(0,0,0,0.06); }
+    .feedback-card h3 { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+    .feedback-card > p { font-size: 13px; color: var(--muted); margin-bottom: 20px; }
+    .form-group { margin-bottom: 12px; }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 11px 14px; border: 1.5px solid #e5e5e5; border-radius: 10px; font-family: 'Nunito', sans-serif; font-size: 14px; color: var(--text); background: #fafafa; transition: border-color 0.2s; outline: none; }
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--green); background: #fff; }
+    .form-group textarea { height: 100px; resize: vertical; }
+    .btn-submit { width: 100%; padding: 13px; background: var(--green); color: #fff; border: none; border-radius: 30px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 700; cursor: pointer; transition: background 0.3s; margin-top: 4px; }
+    .btn-submit:hover { background: var(--green-dark); }
+    .checkbox-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); margin: 10px 0; }
+
+    /* FOOTER */
+    .footer { background: #0a0a0a; color: #fff; padding: 60px 40px 0; }
+    .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1.5fr; gap: 40px; max-width: 1100px; margin: auto; padding-bottom: 40px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .footer-col h4 { font-size: 13px; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: #fff; margin-bottom: 16px; }
+    .footer-col a, .footer-col p { display: block; font-size: 13px; color: #999; text-decoration: none; margin-bottom: 10px; transition: color 0.2s; }
+    .footer-col a:hover { color: var(--green); }
+    .footer-about p { font-size: 13px; color: #999; line-height: 1.8; margin-bottom: 6px; }
+    .footer-brand { font-weight: 800; font-size: 18px; color: #fff; display: block; margin-bottom: 14px; }
+    .footer-brand span { color: var(--green); }
+    .footer-input-row { display: flex; gap: 0; margin-top: 4px; }
+    .footer-input-row input { flex: 1; padding: 10px 14px; background: #1a1a1a; border: 1px solid #333; border-right: none; border-radius: 8px 0 0 8px; color: #fff; font-family: 'Nunito', sans-serif; font-size: 13px; outline: none; }
+    .footer-input-row button { background: var(--green); color: #fff; border: none; padding: 10px 16px; border-radius: 0 8px 8px 0; cursor: pointer; font-weight: 700; font-family: 'Nunito', sans-serif; transition: background 0.2s; }
+    .footer-input-row button:hover { background: var(--green-dark); }
+    .socials { display: flex; gap: 10px; margin-top: 16px; }
+    .socials a { width: 36px; height: 36px; border-radius: 50%; background: #1a1a1a; color: #ccc; display: flex; align-items: center; justify-content: center; font-size: 15px; text-decoration: none; transition: 0.3s; border: 1px solid #2a2a2a; }
+    .socials a:hover { background: var(--green); color: #fff; border-color: var(--green); }
+    .footer-bottom { text-align: center; padding: 20px; font-size: 12px; color: #555; max-width: 1100px; margin: auto; }
+
+    /* MODAL */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.65); justify-content: center; align-items: center; z-index: 5000; backdrop-filter: blur(4px); }
+    .modal.open { display: flex; }
+    .modal-box { background: #fff; border-radius: 24px; padding: 40px; max-width: 420px; width: 90%; text-align: center; position: relative; }
+    .modal-box h2 { font-family: 'Playfair Display', serif; font-size: 28px; margin-bottom: 10px; }
+    .modal-box p { font-size: 14px; color: var(--muted); margin-bottom: 24px; }
+    .modal-close { position: absolute; top: 16px; right: 20px; background: none; border: none; font-size: 22px; cursor: pointer; color: #aaa; }
+    .modal-close:hover { color: var(--text); }
+    .donate-options { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-bottom: 20px; }
+    .donate-opt { padding: 10px 20px; border: 2px solid var(--green); border-radius: 30px; font-weight: 700; cursor: pointer; font-size: 14px; transition: 0.2s; background: transparent; color: var(--green-dark); font-family: 'Nunito', sans-serif; }
+    .donate-opt:hover, .donate-opt.selected { background: var(--green); color: #fff; }
+    .donate-input-row { display: flex; gap: 0; margin-bottom: 16px; }
+    .donate-prefix { background: #f0f0f0; border: 1.5px solid #e5e5e5; border-right: none; border-radius: 10px 0 0 10px; padding: 11px 14px; font-weight: 700; font-size: 14px; }
+    .donate-input-row input { flex: 1; padding: 11px 14px; border: 1.5px solid #e5e5e5; border-left: none; border-radius: 0 10px 10px 0; font-size: 14px; font-family: 'Nunito', sans-serif; outline: none; }
+
+    /* FLOATING MENU */
+    .floating-menu { position: fixed; right: 52px; bottom: 36px; display: flex; flex-direction: column; gap: 10px; z-index: 2500; }
+    .float-btn { width: 44px; height: 44px; border-radius: 50%; background: rgba(10,10,10,0.75); color: white; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 17px; border: 1px solid rgba(255,255,255,0.15); transition: 0.3s; backdrop-filter: blur(6px); cursor: pointer; }
+    .float-btn:hover { transform: scale(1.12); background: var(--green); border-color: var(--green); }
+
+    /* FADE */
+    .fade { opacity: 0; transform: translateY(28px); transition: opacity 0.7s, transform 0.7s; }
+    .fade.show { opacity: 1; transform: translateY(0); }
+
+    /* NAV OVERLAY */
+    .nav-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1500; }
+    .nav-overlay.active { display: block; }
+
+    /* RESPONSIVE */
+    @media (max-width: 900px) {
+        .about-grid { grid-template-columns: 1fr; }
+        .about-img-wrap { display: none; }
+        .feedback-grid { grid-template-columns: 1fr; }
+        .footer-grid { grid-template-columns: 1fr 1fr; }
+        .gallery-masonry { columns: 2; }
     }
-}
-
-/* RESPONSIVE FLOATING MENU */
-@media (max-width: 768px) {
-    .floating-menu {
-        right: 10px;
-        bottom: 15px;
-        gap: 8px;
+    @media (max-width: 768px) {
+        .navbar { padding: 0 18px; }
+        nav { display: none; flex-direction: column; gap: 0; position: fixed; top: 0; right: 0; width: 78%; max-width: 290px; height: 100vh; background: #111; padding: 80px 20px 30px; z-index: 1800; overflow-y: auto; transform: translateX(100%); transition: transform 0.3s; }
+        nav.active { display: flex; transform: translateX(0); }
+        nav a { color: #fff !important; padding: 13px 10px; border-bottom: 1px solid #222; border-radius: 0; font-size: 15px; }
+        nav a:last-child { border-bottom: none; }
+        .menu-btn { display: block; }
+        .section { padding: 60px 20px; }
+        .stats-bar { padding: 0 10px; }
+        .stat-num { font-size: 30px; }
+        .gallery-masonry { columns: 1; }
+        .footer-grid { grid-template-columns: 1fr; padding-bottom: 30px; }
+        #sticky-donate { font-size: 11px; padding: 14px 8px; }
+        .floating-menu { right: 46px; bottom: 20px; }
+        .hero-content { bottom: 8%; left: 5%; right: 5%; }
+        .cta-banner { padding: 60px 20px; }
     }
-
-    .float-btn {
-        width: 40px;
-        height: 40px;
-        font-size: 14px;
-    }
-
-    .float-btn.donate {
-        width: 45px;
-        height: 45px;
-    }
-}
-
-/* RESPONSIVE FOOTER */
-@media (max-width: 768px) {
-    .footer-container {
-        flex-direction: column;
-        gap: 25px;
-        text-align: center;
-    }
-
-    .footer-box {
-        min-width: 100%;
-    }
-
-    .socials {
-        justify-content: center;
-    }
-
-    .footer-box form input,
-    .footer-box form button {
-        width: 90%;
-        margin: auto;
-    }
-
-    .footer-bottom {
-        font-size: 12px;
-    }
-}
-
-.hero, .section, .activities, .gallery {
-    position: relative;
-    z-index: 1;
-}
-
-.slide.active {
-    opacity: 1;
-    z-index: 1;
-}
-
-.btn {
-    display: inline-block;
-    padding: 12px 22px;
-    border-radius: 30px;
-    font-weight: 600;
-    text-decoration: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    border: none;
-    font-size: 14px;
-}
-.btn-primary {
-    background: #5b3df5;
-    color: white;
-    box-shadow: 0 8px 20px rgba(91, 61, 245, 0.3);
-}
-
-.btn-primary:hover {
-    transform: translateY(-3px);
-    background: #4528d4;
-}
-
-.btn-secondary {
-    background: transparent;
-    color: #5b3df5;
-    border: 2px solid #5b3df5;
-}
-
-.btn-secondary:hover {
-    background: #5b3df5;
-    color: white;
-    transform: translateY(-3px);
-}
-
-.btn-link {
-    color: #5b3df5;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-    position: relative;
-}
-
-.btn-link::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -2px;
-    width: 0%;
-    height: 2px;
-    background: #5b3df5;
-    transition: 0.3s;
-}
-
-.btn-link:hover::after {
-    width: 100%;
-}
-
-nav a.active {
-    color: #5b3df5;
-    font-weight: bold;
-    position: relative;
-}
-
-nav a.active::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    bottom: -5px;
-    width: 100%;
-    height: 3px;
-    background: #5b3df5;
-    border-radius: 5px;
-}
-/* TEAM SECTION */
-.team-container {
-    display: flex;
-    justify-content: center;
-    gap: 25px;
-    flex-wrap: wrap;
-    margin-top: 30px;
-}
-
-.team-card img {
-    width: 120px;
-    height: auto; /* 🔥 THIS FIXES CUTTING */
-    max-height: 140px;
-    border-radius: 50%;
-    object-fit: contain; /* 🔥 SHOW FULL IMAGE */
-    margin-bottom: 12px;
-    border: 4px solid #fff;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-    transition: all 0.4s ease;
-}
-
-/* HOVER EFFECT */
-.team-card:hover img {
-    transform: scale(1.08);
-    box-shadow: 0 12px 30px rgba(91, 61, 245, 0.4);
-    border-color: #5b3df5;
-}
-
-/* IMAGE STYLE */
-.team-card img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-    border: 3px solid white;
-}
-/* TEXT */
-.team-card h3 {
-    margin: 10px 0 5px;
-}
-
-.role {
-    color: #5b3df5;
-    font-weight: bold;
-    margin-bottom: 8px;
-}
-
-.desc {
-    font-size: 13px;
-    color: #333;
-}
-
-.team-card::before {
-    content: "";
-    position: absolute;
-    width: 130px;
-    height: 130px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #5b3df5, #00c6ff);
-    z-index: 0;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    opacity: 0;
-    transition: 0.4s;
-}
-
-.team-card:hover::before {
-    opacity: 0.3;
-}
-
-@media (max-width: 768px) {
-
-    body {
-        font-size: 14px;
-    }
-
-    h1 {
-        font-size: 26px;
-    }
-
-    h2 {
-        font-size: 22px;
-    }
-
-    p {
-        font-size: 14px;
-    }
-
-}
-
-@media (max-width: 768px) {
-
-    .hero {
-        height: 90vh;
-    }
-
-    .hero-content {
-        padding: 120px 20px;
-        text-align: center;
-        max-width: 100%;
-    }
-
-    .hero-content button {
-        width: 80%;
-        margin-top: 10px;
-    }
-
-}
-
-@media (max-width: 768px) {
-
-    .cards,
-    .services,
-    .team-container,
-    .activity-grid {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .program-card,
-    .service-card,
-    .team-card,
-    .activity-card,
-    .gallery-card {
-        width: 90% !important;
-        max-width: 350px;
-    }
-
-}
-
-@media (max-width: 768px) {
-
-    .gallery {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: 20px;
-    }
-
-}
-
-@media (max-width: 768px) {
-
-    .team-card {
-        width: 90%;
-        text-align: center;
-    }
-
-}
-
-@media (max-width: 768px) {
-
-    .navbar {
-        padding: 15px 20px;
-    }
-
-    nav {
-        width: 70%;
-        right: 10px;
-    }
-
-}
-
-@media (max-width: 768px) {
-
-    .section {
-        padding: 70px 20px;
-    }
-
-    .activities {
-        padding: 50px 15px;
-    }
-
-}
-img {
-    max-width: 100%;
-    display: block;
-}
-
-section {
-    overflow-x: hidden;
-}
-
-@media (max-width: 768px) {
-
-    .floating-menu {
-        right: 10px;
-        bottom: 15px;
-    }
-
-    .float-btn {
-        width: 38px;
-        height: 38px;
-        font-size: 13px;
-    }
-
-}
-
-@media (max-width: 768px) {
-    nav {
-        background: #111; /* dark background */
-    }
-
-    nav a {
-        color: white; /* ensure visible */
-    }
-}
-</style>
-
+    </style>
 </head>
-
 <body>
 
-<!-- PROGRESS BAR -->
 <div id="progress-bar"></div>
+<button id="sticky-donate" onclick="openModal()">DONATE NOW</button>
+<div class="nav-overlay" id="nav-overlay" onclick="closeMenu()"></div>
 
-<!-- NAVIGATION -->
+<!-- NAVBAR -->
 <header class="navbar">
-    <div class="logo">SCF</div>
-    
+    <a class="logo" href="#home">
+        <div class="logo-icon">M</div>
+        <div class="logo-text">MCADO <span>Mathare · Nairobi</span></div>
+    </a>
     <nav id="nav">
-        <a href="#home" class="btn btn-secondary">Home</a>
-        <a href="#about" class="btn btn-secondary">About Us</a>
-        <a href="#team" class="btn btn-secondary">Team</a>
-        <a href="#programs" class="btn btn-secondary">Programs</a>
-        <a href="#impact" class="btn btn-secondary">Impact</a>
-        <a href="#gallery" class="btn btn-secondary">Gallery</a>
-        <a href="#feedback" class="btn btn-secondary">Feedback</a>
-        <a href="#" class="btn btn-primary">Donate Now</a>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#team">Team</a>
+        <a href="#programs">Programs</a>
+        <a href="#stories">Stories</a>
+        <a href="#news">News</a>
+        <a href="#gallery">Gallery</a>
+        <a href="#feedback">Contact</a>
+        <a href="#" class="btn-donate-nav" onclick="openModal(); return false;">Donate Now</a>
     </nav>
-    
-    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    <button class="menu-btn" id="menu-btn" onclick="toggleMenu()">&#9776;</button>
 </header>
 
-<!-- HERO SECTION -->
+<!-- HERO -->
 <section id="home" class="hero">
-    <div class="slide active" style="background-image:url('MCADO1.jpeg')"></div>
-    <div class="slide" style="background-image:url('MCADO4.jpeg')"></div>
-    
+    <div class="slide active"><img src="MCADO1.jpeg" alt="MCADO Community"></div>
+    <div class="slide"><img src="MCADO4.jpeg" alt="MCADO Youth"></div>
+    <div class="slide"><img src="MCADO6.jpg" alt="MCADO Activities"></div>
+    <div class="hero-overlay"></div>
     <div class="hero-content">
-        <h1>Empowering Youth.</h1>
-        <p>Building a drug-free community</p>
-        <button class="btn btn-primary" onclick="openModal()">Donate Now</button>
+        <div class="hero-tag">Mathare, Nairobi &nbsp;·&nbsp; Est. 2018</div>
+        <h1>Fighting Drugs.<br><em>Empowering</em> Youth.</h1>
+        <p>A grassroots organization providing safe spaces, skills training, and community support to keep Mathare's youth drug-free and full of purpose.</p>
+        <div class="hero-btns">
+            <button class="btn btn-green" onclick="openModal()">&#9829; Donate Now</button>
+            <a class="btn btn-outline-hero" href="#about">Our Story</a>
+        </div>
     </div>
+    <div class="hero-dots" id="hero-dots"></div>
 </section>
 
-<!-- ABOUT SECTION -->
+<!-- STATS BAR -->
+<div class="stats-bar">
+    <div class="stats-inner">
+        <div class="stat-item"><span class="stat-num"><span class="count" data-target="500">0</span><span class="stat-suffix">+</span></span><span class="stat-label">Youth Reached</span></div>
+        <div class="stat-item"><span class="stat-num"><span class="count" data-target="20">0</span></span><span class="stat-label">Communities</span></div>
+        <div class="stat-item"><span class="stat-num"><span class="count" data-target="100">0</span><span class="stat-suffix">+</span></span><span class="stat-label">Volunteers</span></div>
+        <div class="stat-item"><span class="stat-num"><span class="count" data-target="6">0</span></span><span class="stat-label">Years Active</span></div>
+        <div class="stat-item"><span class="stat-num"><span class="count" data-target="3">0</span></span><span class="stat-label">Core Programs</span></div>
+    </div>
+</div>
+
+<!-- ABOUT -->
 <section id="about" class="section fade">
-    <h2>About Us</h2>
-    
-    <p class="about-text"> 
-        Mathare Community Anti-Drugs Organization (MCADO) is a grassroots-based, non-profit, and non-political community-based organization established in 2018. It was founded by concerned community leaders from Mathare who were trained at the Kenya Government School through a partnership with CADCA (Community Anti-Drug Coalitions of America), an American organization specializing in community-based strategies for preventing alcohol, drug, and substance misuse. 
-    </p>
-    
-    <p class="founded"><strong>Founded in 2018</strong></p>
-    <button  class="btn btn-secondary" onclick="scrollToServices()">About More ↓</button>
-</section>
-
-<section id="team" class="section fade">
-    <h2>Our Team</h2>
-    <p>Meet the people behind our mission</p>
-
-    <div class="team-container">
-
-        <!-- MEMBER 1 -->
-        <div class="team-card">
-            <img src="MCADO2.jpeg" alt="Member">
-            <h3>Joseph Arthur</h3>
-            <p class="role">Founder & Director</p>
-            <p class="desc">Leads the organization and oversees all programs.</p>
+    <div class="about-grid">
+        <div class="about-img-wrap">
+            <img src="MCADO2.jpeg" alt="About MCADO">
+            <div class="about-badge"><span class="num">2018</span><span class="lbl">Founded</span></div>
         </div>
-
-        <!-- MEMBER 2 -->
-        <div class="team-card">
-            <img src="Member2.jpeg" alt="Member">
-            <h3>Paul Wanambisi</h3>
-            <p class="role">Chair Person</p>
-            <p class="desc">Manages youth programs and mentorship.</p>
+        <div class="about-text-col">
+            <span class="section-tag">About Us</span>
+            <h2>Grassroots Action Against Drug Abuse in Mathare</h2>
+            <p>Mathare Community Anti-Drugs Organization (MCADO) is a grassroots-based, non-profit, non-political community-based organization established in 2018. Founded by concerned community leaders trained at the Kenya Government School through a partnership with CADCA (Community Anti-Drug Coalitions of America).</p>
+            <p>We provide a safe resource centre where young people learn, grow, and find purpose — keeping them away from drugs while also supporting people living with disabilities.</p>
+            <div class="about-pillars">
+                <div class="pillar"><div class="pillar-dot"></div>Drug Prevention</div>
+                <div class="pillar"><div class="pillar-dot"></div>Youth Empowerment</div>
+                <div class="pillar"><div class="pillar-dot"></div>Women's Rights</div>
+                <div class="pillar"><div class="pillar-dot"></div>Child Protection</div>
+                <div class="pillar"><div class="pillar-dot"></div>Disability Support</div>
+                <div class="pillar"><div class="pillar-dot"></div>Community Dialogue</div>
+            </div>
+            <button class="btn btn-green" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Our Services &darr;</button>
         </div>
-
-        <!-- MEMBER 3 -->
-        <div class="team-card">
-            <img src="MCADO7.jpg" alt="Member">
-            <h3>David Kim</h3>
-            <p class="role">Vice Chair Person</p>
-            <p class="desc">Connects with families and organizes events.</p>
-        </div>
-
-        <!-- MEMBER 1 -->
-        <div class="team-card">
-            <img src="MCADO2.jpeg" alt="Member">
-            <h3>Davice Otieno</h3>
-            <p class="role">Treasurer</p>
-            <p class="desc">Leads the organization and oversees all programs.</p>
-        </div>
-
-        <!-- MEMBER 1 -->
-        <div class="team-card">
-            <img src="MCADO2.jpeg" alt="Member">
-            <h3>Brian Odhiambo</h3>
-            <p class="role">Brian Odhiambo</p>
-            <p class="desc">Leads the organization and oversees all programs.</p>
-        </div>
-
-         <!-- MEMBER 1 -->
-         <div class="team-card">
-            <img src="MCADO2.jpeg" alt="Member">
-            <h3>David Oduor</h3>
-            <p class="role">Program Manager and Mobilization</p>
-            <p class="desc">Leads the organization and oversees all programs.</p>
-
     </div>
 </section>
 
-<!-- PROGRAMS SECTION -->
+<!-- TEAM -->
+<section id="team" class="section section-alt fade">
+    <div class="section-header">
+        <span class="section-tag">Our People</span>
+        <h2>Meet the Team Behind the Mission</h2>
+        <p>Dedicated community leaders working every day to transform Mathare.</p>
+    </div>
+    <div class="team-grid">
+        <div class="team-card"><img src="MCADO2.jpeg" alt="Joseph Arthur"><h3>Joseph Arthur</h3><p class="role">Founder &amp; Director</p></div>
+        <div class="team-card"><img src="Member2.jpeg" alt="Paul Wanambisi"><h3>Paul Wanambisi</h3><p class="role">Chair Person</p></div>
+        <div class="team-card"><img src="MCADO7.jpg" alt="David Kim"><h3>David Kim</h3><p class="role">Vice Chair Person</p></div>
+        <div class="team-card"><img src="MCADO2.jpeg" alt="Davice Otieno"><h3>Davice Otieno</h3><p class="role">Treasurer</p></div>
+        <div class="team-card"><img src="MCADO2.jpeg" alt="Brian Odhiambo"><h3>Brian Odhiambo</h3><p class="role">Secretary</p></div>
+        <div class="team-card"><img src="MCADO2.jpeg" alt="David Oduor"><h3>David Oduor</h3><p class="role">Program Manager</p></div>
+    </div>
+</section>
+
+<!-- PROGRAMS -->
 <section id="programs" class="section fade">
-    <h2>Our Programs</h2>
-    
-    <div class="cards">
-        <!-- PROGRAM 1 -->
-        <div class="program-card">
-            <h3>Program 1: Community Dialogues for Drug Abuse Prevention and Social Empowerment</h3>
-            <p><strong>Target Group:</strong> Youth, Community elders, boda boda riders, teachers, and faith-based groups.</p>
-            <p><strong>Goal:</strong> Strengthen communal bonds and address underlying social issues such as drug abuse</p>
-            <button class="btn btn-secondary" onclick="toggleProgram('prog1')">Read More</button>
-            
-            <div id="prog1" class="accordion">
-                <p>This program creates inclusive spaces for cross-generational dialogue on issues such as drug use, unemployment, violence, and moral erosion. It encourages open communication, breaking taboos and fostering trust among stakeholders. These discussions often lead to collective community action and formation of grassroots initiatives.</p>
-                <p><strong>Activities Include:</strong></p>
-                <ul>
-                    <li>Regular community forums led by trained facilitators and local leaders.</li>
-                    <li>Inter-generational story telling and experience-sharing sessions.</li>
-                    <li>Formation of localized peer support and recovery groups for youth and adults.</li>
-                    <li>Door-to-door outreach and mobilization campaigns targeting high-risk areas</li>
-                    <li>Involvement of religious and cultural institutions to foster shared values and moral guidance</li>
-                    <li>Thematic dialogues focusing on drug abuse, unemployment, family dynamics, and civic responsibility.</li>
-                </ul>
+    <div class="section-header">
+        <span class="section-tag">What We Do</span>
+        <h2>Our Programs</h2>
+        <p>Three flagship programs targeting the root causes of drug abuse and community vulnerability.</p>
+    </div>
+    <div class="programs-grid">
+        <div class="prog-card">
+            <div class="prog-card-top"><div class="prog-num">01</div><div class="prog-icon">🗣️</div><h3>Community Dialogues for Drug Abuse Prevention</h3></div>
+            <div class="prog-card-body">
+                <div class="prog-meta"><p><strong>Target:</strong> Youth, elders, boda boda riders, teachers, faith groups</p><p><strong>Goal:</strong> Strengthen communal bonds and address underlying social issues</p></div>
+                <button class="btn-sm" onclick="toggleAccordion('prog1')">Read More ↓</button>
+                <div id="prog1" class="accordion"><p>Inclusive spaces for cross-generational dialogue on drug use, unemployment, violence, and moral erosion.</p><ul><li>Community forums led by trained facilitators</li><li>Inter-generational storytelling sessions</li><li>Peer support and recovery groups</li><li>Door-to-door outreach in high-risk areas</li><li>Religious and cultural institution partnerships</li></ul></div>
             </div>
         </div>
-        
-        <!-- PROGRAM 2 -->
-        <div class="program-card">
-            <h3>Program 2: School Clubs for Drug Awareness, Life Skills, and Positive Expression</h3>
-            <p><strong>Target Group:</strong> School-going children and adolescents</p>
-            <p><strong>Goal:</strong> Prevent early initiation into drug use and foster life skills, creativity, and leadership</p>
-            <button class="btn btn-secondary" onclick="toggleProgram('prog2')">Read More</button>
-            
-            <div id="prog2" class="accordion">
-                <p>MCADO works closely with schools to build student-run clubs that provide a safe and engaging environment to explore life challenges. The clubs encourage self-expression, peer learning, and leadership while delivering vital education on drug prevention and mental wellness. </p>
-                <p><strong>Activities Include:</strong></p>
-                <ul> 
-                    <li>Interactive sessions on drug abuse, peer pressure, and mental health awareness</li>
-                    <li>Leadership training and mentorship from MCADO role models and educators</li>
-                    <li>Creative arts projects including poetry, skits, painting, and music as tools of expression</li>
-                    <li>Conflict resolution, emotional intelligence, and decision-making workshops</li>
-                    <li>School garden projects promoting environmental responsibility</li>
-                    <li>Friendly inter-school debates, exhibitions, and talent showcases promoting positive competition</li> 
-                </ul> 
+        <div class="prog-card">
+            <div class="prog-card-top"><div class="prog-num">02</div><div class="prog-icon">📚</div><h3>School Clubs for Drug Awareness &amp; Life Skills</h3></div>
+            <div class="prog-card-body">
+                <div class="prog-meta"><p><strong>Target:</strong> School-going children and adolescents</p><p><strong>Goal:</strong> Prevent early drug initiation, foster life skills and leadership</p></div>
+                <button class="btn-sm" onclick="toggleAccordion('prog2')">Read More ↓</button>
+                <div id="prog2" class="accordion"><p>Student-run clubs delivering vital education on drug prevention and mental wellness.</p><ul><li>Drug abuse and mental health awareness sessions</li><li>Leadership training and mentorship</li><li>Creative arts: poetry, skits, painting, music</li><li>Conflict resolution workshops</li><li>Inter-school debates and talent showcases</li></ul></div>
             </div>
         </div>
-        
-        <!-- PROGRAM 3 -->
-        <div class="program-card">
-            <h3>Program 3: Economic Empowerment for Young Mothers</h3>
-            <p><strong>Target Group:</strong> Young mothers in informal settlements</p>
-            <p><strong>Goal:</strong> Break cycles of poverty, dependency, and vulnerability through practical skills and green entrepreneurship.</p>
-            <button class="btn btn-secondary" onclick="toggleProgram('prog3')">Read More</button>
-            
-            <div id="prog3" class="accordion">
-                <p>Young mothers face unique socio-economic hardships, often compounded by limited education, abuse, and stigma. This program provides vocational training alongside emotional and financial empowerment. It builds participants' capacity to start small eco-friendly businesses while helping them recover from trauma and gain confidence as community contributors.</p>
-                <p><strong>Activities Include:</strong></p>
-                <ul>
-                    <li>Vocational skills training in baking, leatherwork, tailoring, and T-shirt printing</li>
-                    <li>Entrepreneurship workshops using recyclable and eco-friendly materials</li>
-                    <li>Financial literacy classes covering budgeting, savings, and digital payment systems</li>
-                    <li>Access to micro-grants and cooperative saving schemes</li>
-                    <li>Therapeutic support groups to address trauma, addiction, gender-based violence, and parenting stress</li>
-                    <li>Participation in community fairs, exhibitions, and digital sales platforms to market products</li>
-                </ul>
+        <div class="prog-card">
+            <div class="prog-card-top"><div class="prog-num">03</div><div class="prog-icon">👩‍💼</div><h3>Economic Empowerment for Young Mothers</h3></div>
+            <div class="prog-card-body">
+                <div class="prog-meta"><p><strong>Target:</strong> Young mothers in informal settlements</p><p><strong>Goal:</strong> Break cycles of poverty through skills and green entrepreneurship</p></div>
+                <button class="btn-sm" onclick="toggleAccordion('prog3')">Read More ↓</button>
+                <div id="prog3" class="accordion"><p>Vocational training alongside emotional and financial empowerment for young mothers.</p><ul><li>Skills training: baking, tailoring, leatherwork</li><li>Financial literacy and micro-grants</li><li>Therapeutic support for trauma and GBV</li><li>Community fairs and digital sales platforms</li></ul></div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- SERVICES SECTION -->
-<section id="services" class="section services fade">
-    <h2>Our Services</h2>
-    
-    <!-- TOTO CLUB -->
-    <div class="service-card">
-        <img src="MCADO7.jpg">
-        <h3>Toto Club</h3>
-        <p>Child protection</p>
-        <button class="btn btn-secondary" onclick="toggleAccordion('toto')">Read More</button>
-        
-        <div id="toto" class="accordion">
-            <p>Toto Club focuses on child rights protection, awareness, mentorship, and safe spaces for children in slum communities.</p>
-        </div>
+<!-- SERVICES -->
+<section id="services" class="section section-alt fade">
+    <div class="section-header"><span class="section-tag">Services</span><h2>Community Services We Offer</h2><p>Targeted support programs for children, youth, and women in Mathare.</p></div>
+    <div class="services-grid">
+        <div class="service-card"><img src="MCADO7.jpg" alt="Toto Club"><div class="service-card-body"><h3>Toto Club</h3><p>Child rights protection and safe spaces for children in slum communities.</p><button class="btn-sm" onclick="toggleService('svc1')">Learn More ↓</button><div id="svc1" class="service-details"><p>Toto Club focuses on child rights protection, awareness, mentorship, and safe spaces for children in informal settlements.</p></div></div></div>
+        <div class="service-card"><img src="MCADO14.jpg" alt="Young Leaders"><div class="service-card-body"><h3>Young Leaders</h3><p>Leadership development, confidence building, and career guidance for youth.</p><button class="btn-sm" onclick="toggleService('svc2')">Learn More ↓</button><div id="svc2" class="service-details"><p>Young Leaders develops leadership skills, confidence, and career guidance for teenagers and young adults.</p></div></div></div>
+        <div class="service-card"><img src="MCADO11.jpg" alt="Women Empowerment"><div class="service-card-body"><h3>Women Empowerment</h3><p>Skills training, advocacy, and economic empowerment for women.</p><button class="btn-sm" onclick="toggleService('svc3')">Learn More ↓</button><div id="svc3" class="service-details"><p>Supports women through vocational training, advocacy, economic empowerment programs, and community support networks.</p></div></div></div>
     </div>
-    
-    <!-- YOUNG LEADERS -->
-    <div class="service-card">
-        <img src="MCADO14.jpg">
-        <h3>Young Leaders</h3>
-        <p>Youth mentorship</p>
-        <button class="btn btn-secondary" onclick="toggleAccordion('youth')">Read More</button>
-        
-        <div id="youth" class="accordion">
-            <p>Young Leaders develops leadership skills, confidence, and career guidance for teenagers and young adults.</p>
+</section>
+
+<!-- STORIES -->
+<section id="stories" class="section fade">
+    <div class="section-header"><span class="section-tag">Impact Stories</span><h2>Lives Changed in Mathare</h2><p>Real stories from beneficiaries whose lives have been transformed through our programs.</p></div>
+    <div class="stories-grid">
+        <div class="story-card story-quote">
+            <div><div class="quote-mark">"</div><p>Before MCADO found me, I was deep in drug abuse and had no hope. The community dialogue program helped me understand I wasn't alone. Today I am sober, employed, and mentoring other youth in Mathare.</p></div>
+            <div class="who">— James M., Youth Program Graduate, 2023</div>
         </div>
-    </div>
-    
-    <!-- WOMEN EMPOWERMENT -->
-    <div class="service-card">
-        <img src="MCADO11.jpg">
-        <h3>Women Empowerment</h3>
-        <p>Support & advocacy</p>
-        <button class="btn btn-secondary" onclick="toggleAccordion('women')">Read More</button>
-        
-        <div id="women" class="accordion">
-            <p>Women Empowerment supports women through skills training, advocacy, economic empowerment, and community support programs.</p>
+        <div class="story-card">
+            <img class="story-img" src="MCADO6.jpg" alt="Story">
+            <div class="story-body"><span class="story-tag">Young Leaders</span><h3>From the Streets to the Classroom</h3><p>After joining the Young Leaders program at 15, Sarah gained the confidence and skills to return to school. She now leads her school's anti-drug club and wants to become a counselor.</p><div class="story-footer"><div class="story-avatar">S</div><div><div class="story-name">Sarah N.</div><div class="story-role">Young Leaders Member, Age 17</div></div></div></div>
+        </div>
+        <div class="story-card">
+            <img class="story-img" src="MCADO13.jpg" alt="Story">
+            <div class="story-body"><span class="story-tag">Women Empowerment</span><h3>A Mother Who Found Her Footing</h3><p>Grace joined the economic empowerment program as a single mother with no income. After tailoring training and a micro-grant, she now runs her own small business and supports her two children.</p><div class="story-footer"><div class="story-avatar">G</div><div><div class="story-name">Grace W.</div><div class="story-role">Empowerment Program, 2024</div></div></div></div>
+        </div>
+        <div class="story-card">
+            <img class="story-img" src="MCADO10.png" alt="Story">
+            <div class="story-body"><span class="story-tag">Toto Club</span><h3>Giving Children a Safe Space</h3><p>Through the Toto Club, 8-year-old Kevin now attends regular after-school sessions where he learns, plays, and is protected from the dangers on the streets of Mathare.</p><div class="story-footer"><div class="story-avatar">K</div><div><div class="story-name">Kevin O.</div><div class="story-role">Toto Club Member, Age 8</div></div></div></div>
         </div>
     </div>
 </section>
 
-<!-- IMPACT SECTION -->
-<section id="impact" class="section fade">
-    <h2>Our Impact</h2>
-    
-    <div class="stats">
-        <div>
-            <h3 class="count" data-target="500">0</h3>
-            <p>Children</p>
-        </div>
-        <div>
-            <h3 class="count" data-target="20">0</h3>
-            <p>Communities</p>
-        </div>
-        <div>
-            <h3 class="count" data-target="100">0</h3>
-            <p>Volunteers</p>
-        </div>
+<!-- NEWS -->
+<section id="news" class="section section-alt fade">
+    <div class="section-header"><span class="section-tag">News &amp; Events</span><h2>Latest from MCADO</h2><p>Stay updated on our activities, events, and community impact across Mathare.</p></div>
+    <div class="news-grid">
+        <div class="news-card"><img src="MCADO11.jpg" alt="News"><div class="news-card-body"><div class="news-meta"><span class="news-cat">Event</span><span class="news-date">March 2026</span></div><h3>NACADA Prevention Week — Mathare Edition</h3><p>MCADO partnered with NACADA to run a week-long drug prevention campaign across five schools in Mathare, reaching over 800 students with awareness sessions and counseling.</p><span class="news-read">Read more <i class="fas fa-arrow-right"></i></span></div></div>
+        <div class="news-card"><img src="MCADO12.jpg" alt="News"><div class="news-card-body"><div class="news-meta"><span class="news-cat">Update</span><span class="news-date">February 2026</span></div><h3>New Batch of Young Mothers Complete Tailoring Training</h3><p>Twenty young mothers from the economic empowerment program successfully completed vocational training and received start-up kits to launch their small businesses.</p><span class="news-read">Read more <i class="fas fa-arrow-right"></i></span></div></div>
+        <div class="news-card"><img src="MCADO7.jpg" alt="News"><div class="news-card-body"><div class="news-meta"><span class="news-cat">Community</span><span class="news-date">January 2026</span></div><h3>Community Dialogue Forum Draws 200+ Residents</h3><p>Our quarterly community dialogue brought together youth, elders, boda boda riders, and faith leaders for an open conversation on drug abuse, unemployment, and community solutions.</p><span class="news-read">Read more <i class="fas fa-arrow-right"></i></span></div></div>
     </div>
 </section>
 
-<!-- GALLERY SECTION -->
-<section id="gallery" class="gallery fade">
-    <h2 style="grid-column:1/-1;text-align:center;">Gallery</h2>
-    
-    <!-- GALLERY ITEM 1 -->
-    <div class="gallery-card">
-        <img src="MCADO11.jpg">
-        <p class="title">Community Outreach</p>
-        <p class="brief">Engaging families in informal settlements.</p>
-        <span class="btn btn-secondary" onclick="toggleGallery('g1')">Show More</span>
-        
-        <div id="g1" class="gallery-details">
-            <p>We conduct regular community visits to identify vulnerable children, support families, and connect them to education, health, and social services.</p>
-        </div>
-    </div>
-    
-    <!-- GALLERY ITEM 2 -->
-    <div class="gallery-card">
-        <img src="MCADO7.jpg">
-        <p class="title">Youth Counseling Session</p>
-        <p class="brief">Leadership and skills development programs.</p>
-        <span class="btn btn-secondary" onclick="toggleGallery('g2')">Show More</span>
-        
-        <div id="g2" class="gallery-details">
-            <p>We run mentorship and leadership training sessions to equip young people with skills for employment, entrepreneurship, and community leadership.</p>
-        </div>
-    </div>
-    
-    <!-- GALLERY ITEM 3 -->
-    <div class="gallery-card">
-        <img src="MCADO13.jpg">
-        <p class="title">Women Empowerment</p>
-        <p class="brief">Conducting a session with elderly women.</p>
-        <span class="btn btn-secondary" onclick="toggleGallery('g3')">Show More</span>
-        
-        <div id="g3" class="gallery-details">
-            <p>We empower women through training, financial literacy, and advocacy programs that promote independence and sustainable livelihoods.</p>
-        </div>
-    </div>
-    
-    <!-- GALLERY ITEM 4 -->
-    <div class="gallery-card">
-        <img src="MCADO11.jpg">
-        <p class="title">Prevention Week Organized by NACADA</p>
-        <p class="brief">Helping youths with learning equipment to reduce idleness.</p>
-        <span class="btn btn-secondary" onclick="toggleGallery('g4')">Show More</span>
-        
-        <div id="g4" class="gallery-details">
-            <p>We provide school supplies, mentorship, and academic support programs to ensure children stay in school and perform better.</p>
-        </div>
-    </div>
-    
-    <!-- GALLERY ITEM 5 -->
-    <div class="gallery-card">
-        <img src="MCADO12.jpg">
-        <p class="title">MCADO Core Team Planning</p>
-        <p class="brief">Planning meetings with core team and volunteers.</p>
-        <span class="btn btn-secondary" onclick="toggleGallery('g5')">Show More</span>
-        
-        <div id="g5" class="gallery-details">
-            <p>We run mentorship and leadership training sessions to equip young people with skills for employment, entrepreneurship, and community leadership.</p>
-        </div>
+<!-- ACTIVITIES -->
+<section id="activities" class="section fade">
+    <div class="section-header"><span class="section-tag">On the Ground</span><h2>Our Activities</h2><p>Day-to-day work creating lasting change across Mathare.</p></div>
+    <div class="activities-grid">
+        <div class="activity-card"><img src="MCADO6.jpg" alt="Outreach"><div class="activity-card-body"><h3>Community Outreach</h3><p>Visiting homes and connecting families to essential support services.</p><button class="btn-sm" onclick="toggleAccordion('act1')">Read More ↓</button><div id="act1" class="activity-details"><p>Our outreach programs identify vulnerable children and connect families to education, health, and food assistance.</p></div></div></div>
+        <div class="activity-card"><img src="MCADO10.png" alt="Education"><div class="activity-card-body"><h3>Education Support</h3><p>Providing learning materials, mentorship, and tutoring for children.</p><button class="btn-sm" onclick="toggleAccordion('act2')">Read More ↓</button><div id="act2" class="activity-details"><p>We support children with school supplies, tutoring programs, and academic guidance to improve performance and school retention.</p></div></div></div>
+        <div class="activity-card"><img src="MCADO14.jpg" alt="Youth"><div class="activity-card-body"><h3>Youth Empowerment</h3><p>Leadership training, career talks, and life skills for young people.</p><button class="btn-sm" onclick="toggleAccordion('act3')">Read More ↓</button><div id="act3" class="activity-details"><p>Leadership training, career talks, and life skills workshops prepare young people for employment and entrepreneurship opportunities.</p></div></div></div>
     </div>
 </section>
 
-<!-- ACTIVITIES SECTION -->
-<section class="activities fade">
-    <h2>Our Activities</h2>
-    
-    <div class="activity-grid">
-        <!-- ACTIVITY CARD 1 -->
-        <div class="activity-card">
-            <img src="MCADO6.jpg">
-            <h3>Community Outreach</h3>
-            <p>We engage with families in informal settlements.</p>
-            <span class="btn btn-secondary" onclick="toggleActivity('a1')">Read More</span>
-            
-            <div id="a1" class="activity-details">
-                <p>Our outreach programs focus on visiting homes, identifying vulnerable children, and connecting families to essential support services like education, health, and food assistance.</p>
-            </div>
-        </div>
-        
-        <!-- ACTIVITY CARD 2 -->
-        <div class="activity-card">
-            <img src="MCADO10.png">
-            <h3>Education Support</h3>
-            <p>We provide learning materials and mentorship.</p>
-            <span class="btn btn-secondary" onclick="toggleActivity('a2')">Read More</span>
-            
-            <div id="a2" class="activity-details">
-                <p>We support children with school supplies, mentorship sessions, tutoring programs, and academic guidance to improve performance and retention in school.</p>
-            </div>
-        </div>
-        
-        <!-- ACTIVITY CARD 3 -->
-        <div class="activity-card">
-            <img src="MCADO14.jpg">
-            <h3>Youth Empowerment</h3>
-            <p>Building leadership skills for young people.</p>
-            <span class="btn btn-secondary" onclick="toggleActivity('a3')">Read More</span>
-            
-            <div id="a3" class="activity-details">
-                <p>We run leadership training, career talks, and life skills workshops to prepare young people for employment and entrepreneurship opportunities.</p>
-            </div>
-        </div>
+<!-- GALLERY -->
+<section id="gallery" class="section section-alt fade">
+    <div class="section-header"><span class="section-tag">Gallery</span><h2>MCADO in Action</h2><p>Glimpses of our community work across Mathare.</p></div>
+    <div class="gallery-masonry">
+        <div class="gallery-item"><img src="MCADO11.jpg" alt="Community Outreach"><div class="gallery-overlay"><div class="gallery-caption">Community Outreach</div></div></div>
+        <div class="gallery-item"><img src="MCADO7.jpg" alt="Youth Session"><div class="gallery-overlay"><div class="gallery-caption">Youth Counseling</div></div></div>
+        <div class="gallery-item"><img src="MCADO13.jpg" alt="Women Empowerment"><div class="gallery-overlay"><div class="gallery-caption">Women Empowerment</div></div></div>
+        <div class="gallery-item"><img src="MCADO12.jpg" alt="Team Planning"><div class="gallery-overlay"><div class="gallery-caption">Core Team Planning</div></div></div>
+        <div class="gallery-item"><img src="MCADO6.jpg" alt="Outreach"><div class="gallery-overlay"><div class="gallery-caption">Field Outreach</div></div></div>
+        <div class="gallery-item"><img src="MCADO14.jpg" alt="Youth Program"><div class="gallery-overlay"><div class="gallery-caption">Youth Program</div></div></div>
     </div>
 </section>
 
-<!-- CALL TO ACTION SECTION -->
-<section class="cta fade">
-    <h2>Join Us Today</h2>
-    <p>Be part of the change.</p>
-    <button class="btn btn-primary" onclick="openModal()">Donate</button>
-</section>
+<!-- CTA -->
+<div class="cta-banner fade">
+    <h2>Be Part of the Change in Mathare</h2>
+    <p>Every contribution — whether time, skills, or money — helps us keep one more young person drug-free and full of hope.</p>
+    <div class="cta-btns">
+        <button class="btn btn-white" onclick="openModal()">&#9829; Donate Today</button>
+        <a class="btn btn-outline-white" href="#feedback">Volunteer With Us</a>
+    </div>
+</div>
 
-<!-- FEEDBACK SECTION -->
+<!-- FEEDBACK -->
 <section id="feedback" class="section fade">
-    <h2>Stay Connected With Us</h2>
-    <p>We value your feedback and keep you updated on our impact.</p>
-    
-    <div class="feedback-container">
-        <!-- FEEDBACK FORM -->
-        <div class="feedback-box">
-            <h3>Send Feedback</h3>
+    <div class="section-header"><span class="section-tag">Stay Connected</span><h2>Get in Touch</h2><p>We value your feedback and would love to hear from potential partners, volunteers, and supporters.</p></div>
+    <div class="feedback-grid">
+        <div class="feedback-card">
+            <h3>Send Us a Message</h3>
+            <p>Share feedback, suggestions, or partnership inquiries.</p>
             <form onsubmit="sendFeedback(event)">
-                <input type="text" placeholder="Your Name" required>
-                <input type="email" placeholder="Your Email" required>
-                <select required>
-                    <option value="">Type of Feedback</option>
-                    <option>Suggestion</option>
-                    <option>Complaint</option>
-                    <option>Appreciation</option>
-                    <option>Partnership Inquiry</option>
-                </select>
-                <textarea placeholder="Write your message..." required></textarea>
-                <button type="submit">Submit Feedback</button>
+                <div class="form-group"><input type="text" placeholder="Your Name" required></div>
+                <div class="form-group"><input type="email" placeholder="Your Email" required></div>
+                <div class="form-group"><select required><option value="">Type of message</option><option>Suggestion</option><option>Complaint</option><option>Appreciation</option><option>Partnership Inquiry</option><option>Volunteer Interest</option></select></div>
+                <div class="form-group"><textarea placeholder="Write your message..."></textarea></div>
+                <button class="btn-submit" type="submit">Send Message</button>
             </form>
         </div>
-        
-        <!-- SUBSCRIPTION BOX -->
-        <div class="feedback-box">
+        <div class="feedback-card">
             <h3>Subscribe to Updates</h3>
-            <p>Get quarterly reports, newsletters & event updates.</p>
-            <form onsubmit="subscribe(event)">
-                <input type="email" placeholder="Enter your email" required>
-                <label style="display:flex; gap:10px; align-items:center; margin:10px 0;">
-                    <input type="checkbox" required>
-                    I agree to receive emails
-                </label>
-                <button type="submit">Subscribe</button>
+            <p>Get quarterly reports, newsletters, and event updates from MCADO.</p>
+            <form onsubmit="subscribe(event)" style="margin-bottom:28px;">
+                <div class="form-group"><input type="email" placeholder="Your email address" required></div>
+                <div class="checkbox-row"><input type="checkbox" id="agree" required><label for="agree">I agree to receive emails from MCADO</label></div>
+                <button class="btn-submit" type="submit">Subscribe</button>
             </form>
+            <h3 style="margin-bottom:8px;">Contact Us Directly</h3>
+            <p style="font-size:14px;color:var(--muted);margin-bottom:4px;">📞 +254 720 203621</p>
+            <p style="font-size:14px;color:var(--muted);margin-bottom:4px;">📧 josepharthur22@gmail.com</p>
+            <p style="font-size:14px;color:var(--muted);">📍 Mathare, Nairobi, Kenya</p>
         </div>
     </div>
 </section>
 
 <!-- FOOTER -->
 <footer class="footer">
-    <div class="footer-container">
-        <!-- ABOUT / SUPPORT -->
-        <div class="footer-box">
-            <h3>Empowering Youth.</h3>
-            <p>Empowering children, youth & women in Nairobi communities.</p>
-            <p><strong>📞 Support Line:</strong> +254 720 203621</p>
-            <p><strong>📧 Email:</strong> josepharthur22@gmail.com</p>
-            <p><strong>📍 Location:</strong> Nairobi, Kenya</p>
-        </div>
-        
-        <!-- QUICK LINKS -->
-        <div class="footer-box">
-            <h3>Quick Links</h3>
-            <a href="#home">Home</a>
-            <a href="#about">About Us</a>
-            <a href="#programs">Programs</a>
-            <a href="#impact">Impact</a>
-            <a href="#gallery">Gallery</a>
-        </div>
-        
-        <!-- PROGRAMS -->
-        <div class="footer-box">
-            <h3>Our Programs</h3>
-            <p>Toto Club</p>
-            <p>Young Leaders</p>
-            <p>Women Empowerment</p>
-        </div>
-        
-        <!-- NEWSLETTER & SOCIALS -->
-        <div class="footer-box">
-            <h3>Stay Updated</h3>
-            <p>Subscribe for reports & event updates.</p>
-            <form onsubmit="subscribe(event)">
-                <input type="email" placeholder="Enter your email" required>
-                <button type="submit">Subscribe</button>
-            </form>
-            
-            <!-- SOCIAL LINKS -->
+    <div class="footer-grid">
+        <div class="footer-col footer-about">
+            <span class="footer-brand">MCADO <span>· Mathare</span></span>
+            <p>Empowering children, youth, and women in Nairobi's informal settlements since 2018.</p>
+            <p>📞 +254 720 203621</p>
+            <p>📧 josepharthur22@gmail.com</p>
+            <p>📍 Mathare, Nairobi, Kenya</p>
             <div class="socials">
-                <a href="https://www.facebook.com/YOUR_PAGE" target="_blank" title="Facebook">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="https://www.instagram.com/YOUR_USERNAME" target="_blank" title="Instagram">
-                    <i class="fab fa-instagram"></i>
-                </a>
-                <a href="https://twitter.com/YOUR_USERNAME" target="_blank" title="Twitter">
-                    <i class="fab fa-x-twitter"></i>
-                </a>
-                <a href="https://wa.me/254712345678" target="_blank" title="WhatsApp">
-                    <i class="fab fa-whatsapp"></i>
-                </a>
+                <a href="https://www.facebook.com/YOUR_PAGE" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://www.instagram.com/Mcado_mathare" target="_blank"><i class="fab fa-instagram"></i></a>
+                <a href="https://twitter.com/YOUR_USERNAME" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                <a href="https://wa.me/254706946312" target="_blank"><i class="fab fa-whatsapp"></i></a>
+            </div>
+        </div>
+        <div class="footer-col">
+            <h4>Quick Links</h4>
+            <a href="#home">Home</a><a href="#about">About Us</a><a href="#programs">Programs</a>
+            <a href="#stories">Stories</a><a href="#news">News &amp; Events</a><a href="#gallery">Gallery</a>
+        </div>
+        <div class="footer-col">
+            <h4>Our Services</h4>
+            <p>Toto Club</p><p>Young Leaders</p><p>Women Empowerment</p><p>Community Dialogues</p><p>School Programs</p>
+        </div>
+        <div class="footer-col">
+            <h4>Stay Updated</h4>
+            <p>Subscribe for reports &amp; event updates.</p>
+            <div class="footer-input-row">
+                <input type="email" placeholder="Your email">
+                <button onclick="alert('Subscribed! Thank you.')">Go</button>
             </div>
         </div>
     </div>
-    
-    <!-- COPYRIGHT -->
-    <div class="footer-bottom">
-        <p>© 2026 Mathare Community Anti-Drugs Organization. All rights reserved.</p>
-    </div>
+    <div class="footer-bottom">© 2026 Mathare Community Anti-Drugs Organization. All rights reserved.</div>
 </footer>
 
-<!-- DONATION MODAL -->
+<!-- MODAL -->
 <div id="modal" class="modal">
-    <div class="modal-content">
-        <h2>Support Us</h2>
-        <p>Your donation matters.</p>
-        <button onclick="closeModal()">Close</button>
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">&#10005;</button>
+        <h2>Support MCADO</h2>
+        <p>Your donation keeps Mathare's youth drug-free and hopeful.</p>
+        <div class="donate-options">
+            <button class="donate-opt" onclick="selectAmt(this,'500')">KES 500</button>
+            <button class="donate-opt selected" onclick="selectAmt(this,'1000')">KES 1,000</button>
+            <button class="donate-opt" onclick="selectAmt(this,'2500')">KES 2,500</button>
+            <button class="donate-opt" onclick="selectAmt(this,'5000')">KES 5,000</button>
+        </div>
+        <div class="donate-input-row">
+            <span class="donate-prefix">KES</span>
+            <input type="number" id="donate-amt" value="1000" placeholder="Custom amount">
+        </div>
+        <button class="btn-submit" onclick="alert('Thank you for your generosity! Redirecting to payment...')">&#9829; Donate Now</button>
+        <p style="font-size:12px;color:#aaa;margin-top:12px;">Mpesa / Card / Bank Transfer accepted</p>
     </div>
 </div>
-
-<!-- JAVASCRIPT -->
-<script>
-
-// Toggle Mobile Menu
-function toggleMenu() {
-    document.getElementById("nav").classList.toggle("active");
-}
-
-// Hero Slideshow
-let slides = document.querySelectorAll(".slide");
-
-if (slides.length > 0) {
-    let i = 0;
-    slides[0].classList.add("active");
-
-    setInterval(() => {
-        slides[i].classList.remove("active");
-        i = (i + 1) % slides.length;
-        slides[i].classList.add("active");
-    }, 4000);
-}
-
-// Scroll Event Listeners
-let started = false;
-window.addEventListener("scroll", () => {
-    // Fade in elements on scroll
-    document.querySelectorAll(".fade").forEach(el => {
-        if (el.getBoundingClientRect().top < window.innerHeight - 100) {
-            el.classList.add("show");
-        }
-    });
-    
-    // Animate counters
-    if (!started) {
-        document.querySelectorAll(".count").forEach(counter => {
-            let update = () => {
-                let target = +counter.dataset.target;
-                let count = +counter.innerText;
-                let inc = target / 100;
-                
-                if (count < target) {
-                    counter.innerText = Math.ceil(count + inc);
-                    setTimeout(update, 20);
-                } else {
-                    counter.innerText = target;
-                }
-            };
-            update();
-        });
-        started = true;
-    }
-});
-
-// Modal Functions
-function openModal() {
-    document.getElementById("modal").style.display = "flex";
-}
-
-function closeModal() {
-    document.getElementById("modal").style.display = "none";
-}
-
-// Scroll to Services Section
-function scrollToServices() {
-    document.getElementById("services").scrollIntoView({ behavior: "smooth" });
-}
-
-// Open Service Alert
-function openService(type) {
-    let msg = {
-        toto: "Child protection programs",
-        youth: "Youth mentorship programs",
-        women: "Women empowerment initiatives"
-    };
-    alert(msg[type]);
-}
-
-// Toggle Accordion
-function toggleAccordion(id) {
-    const box = document.getElementById(id);
-    if (box.classList.contains("open")) {
-        box.classList.remove("open");
-    } else {
-        box.classList.add("open");
-    }
-}
-
-// Toggle Program Accordion
-function toggleProgram(id) {
-    const box = document.getElementById(id);
-    if (box.classList.contains("open")) {
-        box.classList.remove("open");
-    } else {
-        box.classList.add("open");
-    }
-}
-
-// Toggle Activity Accordion
-function toggleActivity(id) {
-    const box = document.getElementById(id);
-    if (box.classList.contains("open")) {
-        box.classList.remove("open");
-    } else {
-        box.classList.add("open");
-    }
-}
-
-// Toggle Gallery Accordion
-function toggleGallery(id) {
-    const box = document.getElementById(id);
-    if (box.classList.contains("open")) {
-        box.classList.remove("open");
-    } else {
-        box.classList.add("open");
-    }
-}
-
-// Send Feedback
-function sendFeedback(e) {
-    e.preventDefault();
-    alert("Thank you for your feedback! We truly appreciate your input.");
-    e.target.reset();
-}
-
-// Subscribe to Updates
-function subscribe(e) {
-    e.preventDefault();
-    alert("You have successfully subscribed to our updates!");
-    e.target.reset();
-}
-
-// Scroll Progress Bar
-window.addEventListener("scroll", () => {
-    let scrollTop = document.documentElement.scrollTop;
-    let scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-    let progress = (scrollTop / scrollHeight) * 100;
-    document.getElementById("progress-bar").style.width = progress + "%";
-});
-
-const sections = document.querySelectorAll("section");
-const navLinks = document.querySelectorAll("nav a");
-
-window.addEventListener("scroll", () => {
-    let current = "";
-
-    sections.forEach(section => {
-        const sectionTop = section.offsetTop - 150;
-        const sectionHeight = section.offsetHeight;
-
-        if (pageYOffset >= sectionTop) {
-            current = section.getAttribute("id");
-        }
-    });
-
-    navLinks.forEach(link => {
-        link.classList.remove("active");
-
-        if (link.getAttribute("href") === "#" + current) {
-            link.classList.add("active");
-        }
-    });
-});
-
-</script>
 
 <!-- FLOATING MENU -->
 <div class="floating-menu">
-    <a href="#home" class="float-btn">🏠 H</a>
-    <a href="#about" class="float-btn">ℹ️ A</a>
-    <a href="#team" class="float-btn">👥T</a>
-    <a href="#programs" class="float-btn">📦 P</a>
-    <a href="#impact" class="float-btn">📊 I</a>
-    <a href="#gallery" class="float-btn">🖼️ G</a>
-    <a href="#feedback" class="float-btn">💬 F</a>
-    <button class="float-btn donate" onclick="openModal()">💖</button>
+    <a href="#home" class="float-btn" title="Home"><i class="fas fa-home"></i></a>
+    <a href="#about" class="float-btn" title="About"><i class="fas fa-info"></i></a>
+    <a href="#team" class="float-btn" title="Team"><i class="fas fa-users"></i></a>
+    <a href="#programs" class="float-btn" title="Programs"><i class="fas fa-book"></i></a>
+    <a href="#stories" class="float-btn" title="Stories"><i class="fas fa-heart"></i></a>
+    <a href="#news" class="float-btn" title="News"><i class="fas fa-newspaper"></i></a>
+    <a href="#gallery" class="float-btn" title="Gallery"><i class="fas fa-images"></i></a>
+    <a href="#feedback" class="float-btn" title="Contact"><i class="fas fa-envelope"></i></a>
 </div>
 
+<script>
+function toggleMenu() {
+    document.getElementById('nav').classList.toggle('active');
+    document.getElementById('nav-overlay').classList.toggle('active');
+}
+function closeMenu() {
+    document.getElementById('nav').classList.remove('active');
+    document.getElementById('nav-overlay').classList.remove('active');
+}
+document.querySelectorAll('#nav a').forEach(a => a.addEventListener('click', closeMenu));
+
+const slides = document.querySelectorAll('.slide');
+const dotsWrap = document.getElementById('hero-dots');
+let cur = 0;
+slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'hero-dot' + (i === 0 ? ' active' : '');
+    d.onclick = () => goSlide(i);
+    dotsWrap.appendChild(d);
+});
+function goSlide(n) {
+    slides[cur].classList.remove('active');
+    dotsWrap.children[cur].classList.remove('active');
+    cur = n;
+    slides[cur].classList.add('active');
+    dotsWrap.children[cur].classList.add('active');
+}
+setInterval(() => goSlide((cur + 1) % slides.length), 4500);
+
+let counterDone = false;
+window.addEventListener('scroll', () => {
+    document.querySelectorAll('.fade').forEach(el => {
+        if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('show');
+    });
+    const st = document.documentElement.scrollTop;
+    const sh = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+    document.getElementById('progress-bar').style.width = (st / sh * 100) + '%';
+    if (!counterDone) {
+        const bar = document.querySelector('.stats-bar');
+        if (bar && bar.getBoundingClientRect().top < window.innerHeight) {
+            document.querySelectorAll('.count').forEach(el => {
+                const target = +el.dataset.target;
+                let val = 0;
+                const step = Math.ceil(target / 80);
+                const t = setInterval(() => { val = Math.min(val + step, target); el.textContent = val; if (val >= target) clearInterval(t); }, 18);
+            });
+            counterDone = true;
+        }
+    }
+    let active = '';
+    document.querySelectorAll('section[id]').forEach(s => { if (window.pageYOffset >= s.offsetTop - 180) active = s.id; });
+    document.querySelectorAll('#nav a').forEach(a => { a.classList.toggle('active', a.getAttribute('href') === '#' + active); });
+});
+
+function openModal()  { document.getElementById('modal').classList.add('open'); }
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+document.getElementById('modal').addEventListener('click', e => { if (e.target === document.getElementById('modal')) closeModal(); });
+function selectAmt(btn, amt) {
+    document.querySelectorAll('.donate-opt').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+    document.getElementById('donate-amt').value = amt;
+}
+function toggleAccordion(id) { document.getElementById(id).classList.toggle('open'); }
+function toggleService(id) { document.getElementById(id).classList.toggle('open'); }
+function sendFeedback(e) { e.preventDefault(); alert('Thank you for your message! We will get back to you soon.'); e.target.reset(); }
+function subscribe(e) { e.preventDefault(); alert('You are now subscribed to MCADO updates!'); e.target.reset(); }
+</script>
 </body>
 </html>
